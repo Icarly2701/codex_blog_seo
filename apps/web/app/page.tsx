@@ -14,7 +14,8 @@ type PostItem = {
   created_at: string;
 };
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL;
+const rawApiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || "";
+const apiBaseUrl = rawApiBaseUrl.replace(/\/+$/, "");
 
 export default function HomePage() {
   const [session, setSession] = useState<Session | null>(null);
