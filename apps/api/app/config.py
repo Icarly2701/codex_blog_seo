@@ -5,8 +5,11 @@ class Settings(BaseSettings):
     supabase_url: str
     supabase_anon_key: str
     supabase_service_role_key: str
-    openai_api_key: str
+    llm_provider: str = "openai"
+    openai_api_key: str | None = None
     openai_model: str = "gpt-4o-mini"
+    groq_api_key: str | None = None
+    groq_model: str = "llama-3.1-8b-instant"
     cors_origins: str = "http://localhost:3000"
 
     # Render injects env vars directly. Local dev can still use .env in CWD.

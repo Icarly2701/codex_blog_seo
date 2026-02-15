@@ -25,7 +25,9 @@ cp .env.example .env
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY` (API only)
-- `OPENAI_API_KEY` (API only)
+- `LLM_PROVIDER` (`openai` 또는 `groq`, 기본 `openai`)
+- `OPENAI_API_KEY` (API only, `LLM_PROVIDER=openai`일 때)
+- `GROQ_API_KEY` (API only, `LLM_PROVIDER=groq`일 때)
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_API_BASE_URL` (예: `http://localhost:8000`)
@@ -33,7 +35,7 @@ cp .env.example .env
 - `CORS_ORIGINS` (예: `http://localhost:3000`)
 
 보안 규칙:
-- `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`는 프론트에 노출 금지
+- `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, `GROQ_API_KEY`는 프론트에 노출 금지
 - `NEXT_PUBLIC_*`만 브라우저 노출
 
 ## Supabase Schema 적용 (SQL Editor 방식, 기본)
@@ -115,8 +117,11 @@ python -m unittest tests/test_usage.py
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
-   - `OPENAI_API_KEY`
-   - `OPENAI_MODEL`
+   - `LLM_PROVIDER` (`groq` 권장)
+   - `GROQ_API_KEY` (`LLM_PROVIDER=groq`)
+   - `GROQ_MODEL` (기본 `llama-3.1-8b-instant`)
+   - `OPENAI_API_KEY` (`LLM_PROVIDER=openai`)
+   - `OPENAI_MODEL` (기본 `gpt-4o-mini`)
    - `CORS_ORIGINS` (Vercel 도메인)
 4. `/healthz`로 헬스체크 확인
 

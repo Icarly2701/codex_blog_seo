@@ -1,4 +1,5 @@
-﻿from openai import OpenAI
+﻿from fastapi import HTTPException, status
+from openai import OpenAI
 
 from app.config import settings
 
@@ -27,11 +28,28 @@ def _build_prompt(keyword: str, tone: str, length: int) -> str:
 
 
 def generate_markdown(keyword: str, tone: str, length: int) -> str:
-    client = OpenAI(api_key=settings.openai_api_key)
+    provider = settings.llm_provider.lower().strip()
+    if provider == "groq":
+        if not settings.groq_api_key:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="GROQ_API_KEY is missing",
+            )
+        client = OpenAI(api_key=settings.groq_api_key, base_url="https://api.groq.com/openai/v1")
+        model = settings.groq_model
+    else:
+        if not settings.openai_api_key:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="OPENAI_API_KEY is missing",
+            )
+        client = OpenAI(api_key=settings.openai_api_key)
+        model = settings.openai_model
+
     prompt = _build_prompt(keyword=keyword, tone=tone, length=length)
 
     completion = client.chat.completions.create(
-        model=settings.openai_model,
+        model=model,
         temperature=0.7,
         messages=[
             {"role": "system", "content": "당신은 한국어 SEO 전문 작가입니다."},
