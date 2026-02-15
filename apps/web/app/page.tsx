@@ -30,6 +30,21 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
 
   const canGenerate = useMemo(() => keyword.trim().length > 0 && !loading, [keyword, loading]);
+  const emailPattern = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
+
+  function formatAuthError(message: string) {
+    const lower = message.toLowerCase();
+    if (lower.includes("anonymous sign-ins are disabled")) {
+      return "Supabase 설정/환경변수 불일치입니다. Vercel의 NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY를 같은 프로젝트 값으로 다시 설정하세요.";
+    }
+    if (lower.includes("email_address_invalid")) {
+      return "이메일 형식이 올바르지 않습니다. 실제 사용 가능한 이메일 주소로 시도하세요.";
+    }
+    if (lower.includes("email not confirmed")) {
+      return "이메일 인증이 필요합니다. 받은 편지함(스팸함 포함)에서 인증 링크를 먼저 클릭하세요.";
+    }
+    return message;
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -53,9 +68,17 @@ export default function HomePage() {
 
   async function signUpWithEmail() {
     setError("");
+    if (!emailPattern.test(email)) {
+      setError("이메일 형식이 올바르지 않습니다.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
     const { error: signUpError } = await supabase.auth.signUp({ email, password });
     if (signUpError) {
-      setError(signUpError.message);
+      setError(formatAuthError(signUpError.message));
       return;
     }
     setUsageMessage("이메일 인증이 필요한 설정일 수 있습니다. 인증 후 로그인하세요.");
@@ -63,9 +86,17 @@ export default function HomePage() {
 
   async function signInWithEmail() {
     setError("");
+    if (!emailPattern.test(email)) {
+      setError("이메일 형식이 올바르지 않습니다.");
+      return;
+    }
+    if (!password) {
+      setError("비밀번호를 입력하세요.");
+      return;
+    }
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     if (signInError) {
-      setError(signInError.message);
+      setError(formatAuthError(signInError.message));
     }
   }
 
