@@ -1,9 +1,4 @@
-﻿from pathlib import Path
-
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
-
-ROOT_ENV = Path(__file__).resolve().parents[3] / ".env"
+﻿from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -14,7 +9,8 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4o-mini"
     cors_origins: str = "http://localhost:3000"
 
-    model_config = SettingsConfigDict(env_file=(str(ROOT_ENV), ".env"), env_file_encoding="utf-8")
+    # Render injects env vars directly. Local dev can still use .env in CWD.
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     @property
     def cors_origin_list(self) -> list[str]:
