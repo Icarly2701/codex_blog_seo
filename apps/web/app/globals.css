@@ -1,0 +1,14 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(160deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #0f172a;
+  font-family: "Segoe UI", "Noto Sans KR", sans-serif;
+}
