@@ -94,6 +94,8 @@ python -m unittest tests/test_usage.py
 ## 배포 가이드
 
 ### Web: Vercel
+`vercel.json`이 `apps/web`를 루트로 사용하도록 포함되어 있습니다.
+
 1. Vercel에 Git 리포 연결
 2. Environment Variables 설정
    - `NEXT_PUBLIC_SUPABASE_URL`
@@ -104,6 +106,8 @@ python -m unittest tests/test_usage.py
    - `https://<vercel-domain>/auth/callback`
 
 ### API: Render 또는 Railway
+`render.yaml`이 포함되어 있어 Render BluePrint 배포가 가능합니다.
+
 1. `apps/api` 기준 배포
 2. Start Command
    - `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
